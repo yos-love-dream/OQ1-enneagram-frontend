@@ -13,7 +13,7 @@ function ResultContent() {
   const mainType = parseInt(searchParams.get("main") || "1");
   const wing = parseInt(searchParams.get("wing") || "2");
   const scoresString = searchParams.get("scores") || "{}";
-  const scores = JSON.parse(scoresString);
+  const scores: { [key: string]: number } = JSON.parse(scoresString);
 
   const mainTypeName = TYPE_NAMES[mainType];
   const wingTypeName = TYPE_NAMES[wing];
