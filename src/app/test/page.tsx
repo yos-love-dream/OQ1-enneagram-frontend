@@ -192,7 +192,7 @@ export default function TestPage() {
               size="lg"
               onClick={handlePrev}
               disabled={!canGoPrev}
-              className="flex-1 max-w-[120px] h-12 border-gray-200 dark:border-gray-700"
+              className="flex-1 max-w-[120px] h-12 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
             >
               <ChevronLeft className="w-4 h-4 mr-1" />
               이전

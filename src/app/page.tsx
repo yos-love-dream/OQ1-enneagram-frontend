@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Brain, Clock, TrendingUp } from "lucide-react";
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -10,11 +10,17 @@ export default function Home() {
         <div className="max-w-lg mx-auto">
           {/* Header */}
           <div className="text-center mb-12 space-y-6">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 mb-4">
-              <Brain className="w-8 h-8 text-white" />
+            <div className="inline-flex items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 mb-4">
+            <Image
+              src="/svgviewer-output.svg"
+              alt="Bible Character Test Logo"
+              width={120}
+              height={120}
+              priority
+            />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100">
-              에니어그램 테스트
+              나에게 맞는 성경인물
             </h1>
             <p className="text-base text-gray-600 dark:text-gray-400">
               나의 성격 유형을 발견하고<br />더 깊이 있는 자기 이해의 여정을 시작하세요

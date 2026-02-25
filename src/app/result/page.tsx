@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { TYPE_NAMES, TYPE_DESCRIPTIONS } from "@/lib/test-data";
-import { Award, Target, TrendingUp, Home, Share2 } from "lucide-react";
+import { Award, Target, TrendingUp, Home, Share2, ExternalLink } from "lucide-react";
 
 function ResultContent() {
   const searchParams = useSearchParams();
@@ -31,19 +31,19 @@ function ResultContent() {
             <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">
               테스트 완료!
             </h1>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-xl text-gray-600 dark:text-gray-300">
               당신의 에니어그램 성격 유형을 확인하세요
             </p>
           </div>
 
           {/* Main Result Card */}
-          <Card className="shadow-2xl border-2">
+          <Card className="shadow-2xl border-2 dark:border-gray-700 dark:bg-gray-900">
             <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-t-xl">
               <div className="space-y-2">
                 <CardDescription className="text-indigo-100">
                   당신의 주 유형은
                 </CardDescription>
-                <CardTitle className="text-4xl md:text-5xl font-bold">
+                <CardTitle className="text-4xl md:text-5xl font-bold text-white">
                   {mainType}번 유형 - {mainTypeName}
                 </CardTitle>
                 <CardDescription className="text-indigo-100 text-base">
@@ -55,9 +55,9 @@ function ResultContent() {
               <div className="space-y-3">
                 <div className="flex items-center space-x-2 text-indigo-600 dark:text-indigo-400">
                   <Target className="w-5 h-5" />
-                  <h3 className="font-semibold text-lg">유형 설명</h3>
+                  <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">유형 설명</h3>
                 </div>
-                <p className="text-lg leading-relaxed text-muted-foreground">
+                <p className="text-lg leading-relaxed text-gray-600 dark:text-gray-300">
                   {description}
                 </p>
               </div>
@@ -65,13 +65,13 @@ function ResultContent() {
           </Card>
 
           {/* Scores Grid */}
-          <Card className="shadow-xl border-2">
+          <Card className="shadow-xl border-2 dark:border-gray-700 dark:bg-gray-900">
             <CardHeader>
               <div className="flex items-center space-x-2">
                 <TrendingUp className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-                <CardTitle>유형별 점수</CardTitle>
+                <CardTitle className="text-gray-900 dark:text-gray-100">유형별 점수</CardTitle>
               </div>
-              <CardDescription>
+              <CardDescription className="text-gray-500 dark:text-gray-400">
                 각 유형별로 받은 점수입니다 (최소 15점 ~ 최대 75점)
               </CardDescription>
             </CardHeader>
@@ -89,7 +89,7 @@ function ResultContent() {
                       <div key={type} className="space-y-2">
                         <div className="flex justify-between items-center">
                           <div className="flex items-center space-x-2">
-                            <span className="font-semibold">
+                            <span className="font-semibold text-gray-800 dark:text-gray-100">
                               {type}번 - {TYPE_NAMES[typeNum]}
                             </span>
                             {isMain && (
@@ -103,7 +103,7 @@ function ResultContent() {
                               </span>
                             )}
                           </div>
-                          <span className="font-bold text-lg">{score}점</span>
+                          <span className="font-bold text-lg text-gray-900 dark:text-gray-100">{score}점</span>
                         </div>
                         <div className="h-3 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                           <div
@@ -124,10 +124,26 @@ function ResultContent() {
             </CardContent>
           </Card>
 
+          {/* OQ-1 Signup CTA */}
+          <Link
+            href={`https://oq-1-sns-frontend.vercel.app/signup?enneagram-type=${mainType}w${wing}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block"
+          >
+            <Button
+              size="lg"
+              className="w-full h-14 text-base bg-gradient-to-r from-violet-600 to-pink-600 hover:from-violet-700 hover:to-pink-700 text-white font-semibold rounded-xl shadow-lg"
+            >
+              <ExternalLink className="w-5 h-5 mr-2" />
+              오큐완 앱 가입하러 가기
+            </Button>
+          </Link>
+
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4">
             <Link href="/" className="flex-1">
-              <Button variant="outline" size="lg" className="w-full">
+              <Button variant="outline" size="lg" className="w-full border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700">
                 <Home className="w-4 h-4 mr-2" />
                 처음으로
               </Button>
@@ -147,7 +163,7 @@ function ResultContent() {
           </div>
 
           {/* Footer Note */}
-          <p className="text-center text-sm text-muted-foreground">
+          <p className="text-center text-sm text-gray-500 dark:text-gray-400">
             에니어그램은 자기 이해와 성장을 위한 도구입니다. 이 결과를 바탕으로 자신을 더 깊이 탐구해보세요.
           </p>
         </div>
