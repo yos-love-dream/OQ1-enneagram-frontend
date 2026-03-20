@@ -205,7 +205,7 @@ const fadeUp = {
   show: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.12, duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+    transition: { delay: i * 0.12, duration: 0.55, ease: [0.22, 1, 0.36, 1] as const },
   }),
 };
 
@@ -241,7 +241,7 @@ function ResultContent() {
               className="relative inline-block"
               initial={{ scale: 0.7, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.7, ease: [0.34, 1.56, 0.64, 1] }}
+              transition={{ duration: 0.7, ease: [0.34, 1.56, 0.64, 1] as const }}
             >
               <div className="w-48 h-48 md:w-64 md:h-64 mx-auto rounded-full overflow-hidden border-4 border-white shadow-2xl ring-4 ring-indigo-300 dark:ring-indigo-600">
                 <Image

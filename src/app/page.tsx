@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 28 },
   animate: { opacity: 1, y: 0 },
-  transition: { delay, duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+  transition: { delay, duration: 0.55, ease: [0.22, 1, 0.36, 1] as const },
 });
 
 export default function Home() {
@@ -24,7 +24,7 @@ export default function Home() {
               className="inline-flex items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 mb-4"
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.7, ease: [0.34, 1.56, 0.64, 1] }}
+              transition={{ duration: 0.7, ease: [0.34, 1.56, 0.64, 1] as const }}
             >
               <Image
                 src="/svgviewer-output.svg"

@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { QUESTIONS, shuffleQuestions, calculateResult, Response } from "@/lib/test-data";
 import { ChevronLeft, ChevronRight, Check } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 
-const slideVariants = {
+const slideVariants: Variants = {
   enter: (dir: number) => ({
     x: dir > 0 ? 60 : -60,
     opacity: 0,
@@ -15,7 +15,7 @@ const slideVariants = {
   center: {
     x: 0,
     opacity: 1,
-    transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] as const },
   },
   exit: (dir: number) => ({
     x: dir > 0 ? -60 : 60,
