@@ -28,7 +28,7 @@
   --color-chart-5: 27 87% 67%;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   @theme {
     --color-background: 240 10% 3.9%;
     --color-foreground: 0 0% 98%;
@@ -55,7 +55,7 @@
     --color-chart-4: 280 65% 60%;
     --color-chart-5: 340 75% 55%;
   }
-}
+} */
 
 * {
   border-color: theme(colors.border);
