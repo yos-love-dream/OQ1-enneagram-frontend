@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { TYPE_NAMES, TYPE_DESCRIPTIONS } from "@/lib/test-data";
+import { TYPE_NAMES } from "@/lib/test-data";
 import { Target, TrendingUp, Home, Share2, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -21,6 +21,157 @@ const BIBLE_CHARACTERS: { [key: number]: { name: string; image: string } } = {
   8: { name: "다윗", image: "/다윗.png" },
   9: { name: "아브라함", image: "/아브라함.png" },
 };
+
+// ──────────────────────────────────────────────────────────
+// Simple Markdown Renderer
+// ──────────────────────────────────────────────────────────
+function renderInline(text: string): React.ReactNode[] {
+  // Handle bold+italic, bold, italic
+  const parts: React.ReactNode[] = [];
+  const regex = /(\*\*\*(.+?)\*\*\*|\*\*(.+?)\*\*|_(.+?)_|\*(.+?)\*)/g;
+  let last = 0;
+  let match;
+  let key = 0;
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > last) {
+      parts.push(text.slice(last, match.index));
+    }
+    if (match[2]) {
+      parts.push(<strong key={key++}><em>{match[2]}</em></strong>);
+    } else if (match[3]) {
+      parts.push(<strong key={key++}>{match[3]}</strong>);
+    } else if (match[4]) {
+      parts.push(<em key={key++}>{match[4]}</em>);
+    } else if (match[5]) {
+      parts.push(<em key={key++}>{match[5]}</em>);
+    }
+    last = match.index + match[0].length;
+  }
+  if (last < text.length) {
+    parts.push(text.slice(last));
+  }
+  return parts;
+}
+
+function MarkdownContent({ markdown }: { markdown: string }) {
+  const lines = markdown.split("\n");
+  const elements: React.ReactNode[] = [];
+  let i = 0;
+  let key = 0;
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    // Skip the main H1 title (first line)
+    if (line.startsWith("# ")) {
+      i++;
+      continue;
+    }
+
+    // H2
+    if (line.startsWith("## ")) {
+      const text = line.slice(3).trim();
+      elements.push(
+        <h2
+          key={key++}
+          className="text-xl font-bold mt-8 mb-3 text-indigo-700 dark:text-indigo-300 border-b border-indigo-100 dark:border-indigo-800 pb-1"
+        >
+          {renderInline(text)}
+        </h2>
+      );
+      i++;
+      continue;
+    }
+
+    // H3
+    if (line.startsWith("### ")) {
+      const text = line.slice(4).trim();
+      elements.push(
+        <h3
+          key={key++}
+          className="text-lg font-semibold mt-6 mb-2 text-gray-800 dark:text-gray-200"
+        >
+          {renderInline(text)}
+        </h3>
+      );
+      i++;
+      continue;
+    }
+
+    // H4
+    if (line.startsWith("#### ")) {
+      const text = line.slice(5).trim();
+      elements.push(
+        <h4
+          key={key++}
+          className="text-base font-semibold mt-4 mb-1 text-gray-700 dark:text-gray-300"
+        >
+          {renderInline(text)}
+        </h4>
+      );
+      i++;
+      continue;
+    }
+
+    // Blockquote
+    if (line.startsWith("> ")) {
+      const quoteLines: string[] = [];
+      while (i < lines.length && lines[i].startsWith("> ")) {
+        quoteLines.push(lines[i].slice(2));
+        i++;
+      }
+      elements.push(
+        <blockquote
+          key={key++}
+          className="border-l-4 border-indigo-400 dark:border-indigo-500 pl-4 py-1 my-4 italic text-gray-600 dark:text-gray-300 bg-indigo-50 dark:bg-indigo-950/30 rounded-r-lg"
+        >
+          {quoteLines.map((ql, qi) => (
+            <p key={qi} className="mb-1 last:mb-0 leading-relaxed">
+              {renderInline(ql)}
+            </p>
+          ))}
+        </blockquote>
+      );
+      continue;
+    }
+
+    // Unordered list
+    if (line.startsWith("- ") || line.startsWith("* ")) {
+      const listItems: string[] = [];
+      while (i < lines.length && (lines[i].startsWith("- ") || lines[i].startsWith("* "))) {
+        listItems.push(lines[i].slice(2));
+        i++;
+      }
+      elements.push(
+        <ul key={key++} className="list-none space-y-2 my-4 pl-0">
+          {listItems.map((item, idx) => (
+            <li key={idx} className="flex items-start gap-2 text-gray-600 dark:text-gray-300 leading-relaxed">
+              <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-indigo-400 dark:bg-indigo-500 flex-shrink-0" />
+              <span>{renderInline(item)}</span>
+            </li>
+          ))}
+        </ul>
+      );
+      continue;
+    }
+
+    // Empty line
+    if (line.trim() === "") {
+      i++;
+      continue;
+    }
+
+    // Paragraph
+    elements.push(
+      <p key={key++} className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+        {renderInline(line)}
+      </p>
+    );
+    i++;
+  }
+
+  return <div className="prose-custom">{elements}</div>;
+}
 
 // ──────────────────────────────────────────────────────────
 // Radar Chart Component
@@ -221,8 +372,23 @@ function ResultContent() {
 
   const mainTypeName = TYPE_NAMES[mainType];
   const wingTypeName = TYPE_NAMES[wing];
-  const description = TYPE_DESCRIPTIONS[mainType];
   const character = BIBLE_CHARACTERS[mainType];
+
+  const [mdContent, setMdContent] = useState<string>("");
+  const [mdLoading, setMdLoading] = useState(true);
+
+  useEffect(() => {
+    setMdLoading(true);
+    fetch(`/result/type_${mainType}.md`)
+      .then((res) => res.text())
+      .then((text) => {
+        setMdContent(text);
+        setMdLoading(false);
+      })
+      .catch(() => {
+        setMdLoading(false);
+      });
+  }, [mainType]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-950">
@@ -266,7 +432,7 @@ function ResultContent() {
             </div>
           </motion.div>
 
-          {/* ── Main Result Card ── */}
+          {/* ── Main Result Card with MD Content ── */}
           <motion.div
             initial="hidden"
             animate="show"
@@ -293,9 +459,15 @@ function ResultContent() {
                     <Target className="w-5 h-5" />
                     <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">유형 설명</h3>
                   </div>
-                  <p className="text-lg leading-relaxed text-gray-600 dark:text-gray-300">
-                    {description}
-                  </p>
+                  {mdLoading ? (
+                    <div className="animate-pulse space-y-3">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full" />
+                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6" />
+                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-4/6" />
+                    </div>
+                  ) : (
+                    <MarkdownContent markdown={mdContent} />
+                  )}
                 </div>
               </CardContent>
             </Card>
