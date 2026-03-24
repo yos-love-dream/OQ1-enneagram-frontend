@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://enneagram.oq1.kr";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://oq-1-enneagram-frontend.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -82,6 +83,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         {children}
+        <Analytics />
       </body>
     </html>
   );
